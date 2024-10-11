@@ -49,6 +49,11 @@ dependencies {
     implementation(libs.hilt.android)
     kapt(libs.hilt.android.compiler)
 
+    // room
+    implementation(libs.androidx.room.room.runtime)
+    implementation(libs.androidx.room.room.ktx)
+    kapt(libs.androidx.room.room.compiler)
+
     // retrofit
     implementation(libs.retrofit)
     implementation(libs.retrofit.converter.gson)

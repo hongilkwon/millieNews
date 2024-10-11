@@ -1,28 +1,53 @@
 package com.example.data.repository
 
-import com.example.data.retrofit.api.NewsApi
+import android.util.Log
+import com.example.data.datasource.NewsLocalDataSource
+import com.example.data.datasource.NewsRemoteDataSource
+import com.example.data.db.entity.toDomainObj
+import com.example.data.retrofit.response.toEntity
 import com.example.domain.model.Article
 import com.example.domain.repository.NewsRepository
+import com.example.domain.util.ApiResult
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
+
 class NewsRepositoryImpl @Inject constructor(
-    private val newsApi: NewsApi
+    private val newsRemoteDataSource: NewsRemoteDataSource,
+    private val newsLocalDataSource: NewsLocalDataSource
 ) : NewsRepository {
 
-    override suspend fun updateArticles(
-        country: String,
-    ) {
-        val ret = newsApi.getTopHeadlines()
+    private val TAG = "NewsRepositoryImpl"
 
-        // TODO
-        // 성공시 - 이미지 URL로 Bitmap 이미지로 받아서, Room에 저장한다.
-        // 실패시 - 실패 로그
+    override suspend fun updateArticles(country: String) {
+        val ret = newsRemoteDataSource.fetchLatestNews()
+
+        when (ret) {
+            is ApiResult.Success -> {
+                val articles = ret.data.articles
+                if (articles.isNotEmpty()) {
+                    val newArticles = newsLocalDataSource.filterNewArticles(ret.data.articles)
+                    Log.d(TAG, "updateArticles::ApiResult.Success::newArticles::${newArticles}")
+
+                    val imageUrls = newArticles.map { it.urlToImage ?: "" }
+                    val images = newsRemoteDataSource.fetchImagesConcurrently(imageUrls)
+
+                    val articleEntities =
+                        newArticles.mapIndexed { idx, article -> article.toEntity(image = images[idx]) }
+                    newsLocalDataSource.saveArticles(articleEntities)
+                    Log.d(TAG, "updateArticles::ApiResult.Success::saveArticles::")
+                }
+            }
+
+            is ApiResult.Failure -> {
+                Log.d(TAG, "updateArticles::ApiResult.Failure::message:${ret.error.message}")
+            }
+        }
     }
 
-    override fun getArticlesByFlow(country: String): Flow<List<Article>> {
-        TODO("Not yet implemented")
-    }
-
-
+    override fun getAllArticlesByFlow(): Flow<List<Article>> =
+        newsLocalDataSource.getAllArticlesByFlow().map { entities ->
+            entities.map { it.toDomainObj() }
+        }
 }

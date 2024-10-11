@@ -12,11 +12,16 @@ import javax.inject.Inject
 @HiltViewModel
 class MainViewModel @Inject constructor(
     private val newsRepository: NewsRepository
-): ViewModel() {
+) : ViewModel() {
 
     private val TAG = "MainViewModel"
 
     init {
 
+    }
+
+
+    fun updateNewsArticle() = viewModelScope.launch {
+        newsRepository.updateArticles()
     }
 }

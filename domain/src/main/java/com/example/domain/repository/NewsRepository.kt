@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface NewsRepository {
 
-    suspend fun updateArticles(country: String)
+    suspend fun updateArticles(country: String = "us")
 
-    fun getArticlesByFlow(country: String): Flow<List<Article>>
+    fun getAllArticlesByFlow(): Flow<List<Article>>
 }

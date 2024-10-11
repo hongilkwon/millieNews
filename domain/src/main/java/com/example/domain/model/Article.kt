@@ -1,17 +1,16 @@
 package com.example.domain.model
 
-data class Article(
-    val source: String,
-    val author: String? = null,
-    val title: String? = null,
-    val description: String? = null,
-    val url: String? = null,
-    val urlToImage: String? = null,
-    val publishedAt: String? = null,
-    val content: String? = null
-)
+import android.graphics.Bitmap
 
-data class Source(
-    val id: String? = null,
-    val name: String? = null
+data class Article(
+    val id: Int,
+    val source: String,
+    val author: String,
+    val title: String,
+    val description: String,
+    val url: String,
+    val urlToImage: String,
+    val bitmapImage: Bitmap?,
+    val publishedAt: String,
+    val content: String
 )
