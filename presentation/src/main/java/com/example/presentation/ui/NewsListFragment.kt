@@ -1,9 +1,12 @@
 package com.example.presentation.ui
 
+import android.content.Context
+import android.net.ConnectivityManager
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.hilt.navigation.fragment.hiltNavGraphViewModels
 import androidx.lifecycle.lifecycleScope
@@ -29,11 +32,15 @@ class NewsListFragment : Fragment() {
 
     private val articleListAdapter by lazy {
         ArticleListAdapter { id, url ->
-            findNavController().navigate(
-                NewsListFragmentDirections.actionNewsListFragmentToNewsDetailWebViewFragment(
-                    id = id, url = url
+            if (isNetworkConnected(requireContext())) {
+                findNavController().navigate(
+                    NewsListFragmentDirections.actionNewsListFragmentToNewsDetailWebViewFragment(
+                        id = id, url = url
+                    )
                 )
-            )
+            } else {
+                Toast.makeText(requireContext(), getString(R.string.network_connection_warning_message), Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
@@ -42,7 +49,10 @@ class NewsListFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentNewsListBinding.inflate(inflater, container, false)
-        binding.lifecycleOwner = viewLifecycleOwner
+        binding.apply {
+            lifecycleOwner = viewLifecycleOwner
+            vm = viewModel
+        }
         return binding.root
     }
 
@@ -83,5 +93,11 @@ class NewsListFragment : Fragment() {
 
     private fun Int.dpToPx(): Int {
         return (this * resources.displayMetrics.density).toInt()
+    }
+
+    private fun isNetworkConnected(context: Context): Boolean {
+        val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val activeNetwork = connectivityManager.activeNetworkInfo
+        return activeNetwork?.isConnected == true
     }
 }

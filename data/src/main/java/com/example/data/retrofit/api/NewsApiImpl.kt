@@ -40,5 +40,4 @@ class NewsApiImpl @Inject constructor(
             ApiResult.Failure(ApiException(code = UNKNOWN_ERROR_CODE, message = "Unknown_Error"))
         }
     }
-
 }

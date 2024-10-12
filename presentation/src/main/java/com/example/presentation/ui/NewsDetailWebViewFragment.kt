@@ -1,11 +1,15 @@
 package com.example.presentation.ui
 
+import android.graphics.Bitmap
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.webkit.WebResourceError
+import android.webkit.WebResourceRequest
+import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.appcompat.app.AppCompatActivity
 import androidx.hilt.navigation.fragment.hiltNavGraphViewModels
@@ -28,6 +32,27 @@ class NewsDetailWebViewFragment : Fragment() {
     private val binding
         get() = _binding!!
 
+    private val client = object : WebViewClient() {
+        override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
+            super.onPageStarted(view, url, favicon)
+            Log.d(TAG, "webViewClient::onPageStarted::$url")
+        }
+
+        override fun onPageFinished(view: WebView?, url: String?) {
+            super.onPageFinished(view, url)
+            Log.d(TAG, "webViewClient::PonPageFinished::$url")
+        }
+
+        override fun onReceivedError(
+            view: WebView?,
+            request: WebResourceRequest?,
+            error: WebResourceError?
+        ) {
+            super.onReceivedError(view, request, error)
+            Log.e(TAG, "webViewClient::onReceivedError::${error?.description}")
+        }
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -43,7 +68,7 @@ class NewsDetailWebViewFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.webView.apply {
-            webViewClient = WebViewClient()
+            webViewClient = client
             settings.javaScriptEnabled = true
             loadUrl(safeArgs.url)
         }
