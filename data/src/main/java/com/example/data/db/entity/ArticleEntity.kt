@@ -21,7 +21,8 @@ data class ArticleEntity(
     @ColumnInfo(name = "urlToImage") val urlToImage: String? = null,
     @ColumnInfo(name = "bitMapImage") val bitMapImage: Bitmap? = null,
     @ColumnInfo(name = "publishedAt") val publishedAt: String? = null,
-    @ColumnInfo(name = "content") val content: String? = null
+    @ColumnInfo(name = "content") val content: String? = null,
+    @ColumnInfo(name = "isRead") val isRead: Boolean = false
 )
 
 fun ArticleEntity.toDomainObj(): Article =
@@ -36,6 +37,7 @@ fun ArticleEntity.toDomainObj(): Article =
         bitmapImage = bitMapImage,
         publishedAt = publishedAt ?: "",
         content = content ?: "",
+        isRead = isRead
     )
 
 

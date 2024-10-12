@@ -12,5 +12,6 @@ data class Article(
     val urlToImage: String,
     val bitmapImage: Bitmap?,
     val publishedAt: String,
-    val content: String
+    val content: String,
+    val isRead: Boolean
 )

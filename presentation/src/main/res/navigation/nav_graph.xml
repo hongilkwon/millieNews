@@ -21,6 +21,10 @@
         tools:layout="@layout/fragment_news_detail_web_view">
 
         <argument
+            android:name="id"
+            app:argType="integer" />
+
+        <argument
             android:name="url"
             android:defaultValue=""
             app:argType="string" />

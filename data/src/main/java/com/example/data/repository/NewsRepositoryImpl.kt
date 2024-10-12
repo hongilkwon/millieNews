@@ -45,6 +45,11 @@ class NewsRepositoryImpl @Inject constructor(
         }
     }
 
+
+    override suspend fun readArticles(article: Article) =
+        newsLocalDataSource.updateArticle(article.copy(isRead = true))
+
+
     override fun getAllArticlesByFlow(): Flow<List<Article>> =
         newsLocalDataSource.getAllArticlesByFlow().map { entities ->
             entities.map { it.toDomainObj() }

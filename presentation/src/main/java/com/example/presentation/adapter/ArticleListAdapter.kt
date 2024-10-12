@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.domain.model.Article
 import com.example.presentation.databinding.ItemNewsBinding
 
-class ArticleListAdapter(private val onClick: (url: String) -> Unit) :
+class ArticleListAdapter(private val onClick: (id: Int, url: String) -> Unit) :
     ListAdapter<Article, NewsViewHolder>(diffUtil) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NewsViewHolder =
         NewsViewHolder(
@@ -45,7 +45,7 @@ class ArticleListAdapter(private val onClick: (url: String) -> Unit) :
 
 class NewsViewHolder(
     private var binding: ItemNewsBinding,
-    private val itemClick: (String) -> Unit
+    private val itemClick: (Int, String) -> Unit
 ) : RecyclerView.ViewHolder(binding.root) {
 
     private val TAG = "ArticleListAdapter"
@@ -54,7 +54,7 @@ class NewsViewHolder(
         binding.item = item
         binding.layoutNews.setOnClickListener {
             Log.d(TAG, "onBind::url::${item.url}")
-            itemClick.invoke(item.url)
+            itemClick.invoke(item.id, item.url)
         }
     }
 }
