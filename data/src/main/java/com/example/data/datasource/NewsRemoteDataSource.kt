@@ -31,7 +31,6 @@ class NewsRemoteDataSource @Inject constructor(
     suspend fun fetchImagesConcurrently(urls: List<String>) = withContext(Dispatchers.IO) {
         val deferredImages = urls.mapIndexed{ idx, url ->
             async {
-                Log.d(TAG, "fetchImagesConcurrently::$idx::start")
                 downloadBitmapImage(idx, url)
             }
         }

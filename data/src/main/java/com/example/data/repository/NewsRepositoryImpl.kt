@@ -36,7 +36,6 @@ class NewsRepositoryImpl @Inject constructor(
                     val articleEntities =
                         newArticles.mapIndexed { idx, article -> article.toEntity(image = images[idx]) }
                     newsLocalDataSource.saveArticles(articleEntities)
-                    Log.d(TAG, "updateArticles::ApiResult.Success::saveArticles::")
                 }
             }
 

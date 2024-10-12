@@ -16,7 +16,7 @@
         android:theme="@style/Theme.MillieNews"
         tools:targetApi="31">
         <activity
-            android:name="com.example.presentation.uicontroller.MainActivity"
+            android:name="com.example.presentation.ui.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
